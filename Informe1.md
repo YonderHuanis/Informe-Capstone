@@ -25,9 +25,8 @@ library(terra)
 ## terra 1.6.17
 ```
 
-```r
-setwd('~/Documentos/capstone')
 
+```r
 ### Lectura de las bandas del satelite
 banda1<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B1.TIF')
 banda2<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B2.TIF')
