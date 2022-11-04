@@ -84,3 +84,10 @@ text(st_coordinates(estcs_p),labels=ests_sf[,1]$Lugar,pos=3,cex=0.65)
 ### Reflactancia versus concentracion de PM10
 plot(ests_sf[,3]$PM10,R1,xlab='PM10')
 ```
+
+
+```{r}
+x<-1
+y<-3
+x+y
+```
