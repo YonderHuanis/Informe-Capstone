@@ -7,11 +7,12 @@ output:
     keep_md: yes
   pdf_document: default
 ---
-
+### Librerias
 ```{r}
 library(sf)
 library(terra)
 ```
+### Lectura de archivos externos
 
 ```{r}
 
@@ -30,6 +31,8 @@ setMinMax(banda4)
 ### Lectura del archivo que contiene el mapa del Peru
 Peru<-read_sf('gadm41_PER_shp/gadm41_PER_1.shp')
 ```
+
+### Creacion de coordenadas y variables
 
 ```{r}
 ### Coordenadas de las estaciones, longitud y latitud
@@ -68,11 +71,14 @@ R1<-(B1*(2e-5)-0.1)/sin(54.43208851*pi/180)
 
 ```
 
+### El conjunto de Datos
+
 ```{r}
 ### Conjunto de datos 
 ests_sf
 ```
 
+### Algunos gráficos
 
 ```{r}
 ### Ubicacion de las estaciones

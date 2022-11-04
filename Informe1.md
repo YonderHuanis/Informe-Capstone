@@ -1,4 +1,6 @@
 
+## Informe
+
 ### Librerias
 
 ```r
@@ -16,6 +18,7 @@ library(terra)
 ```
 ## terra 1.6.17
 ```
+### Lectura de archivos externos
 
 
 ```r
@@ -34,6 +37,8 @@ setMinMax(banda4)
 ### Lectura del archivo que contiene el mapa del Peru
 Peru<-read_sf('gadm41_PER_shp/gadm41_PER_1.shp')
 ```
+
+### Creacion de coordenadas y variables
 
 
 ```r
@@ -72,6 +77,8 @@ Lima<-st_transform(Peru[c(7,16),4],crs(banda1))
 R1<-(B1*(2e-5)-0.1)/sin(54.43208851*pi/180)
 ```
 
+### El conjunto de Datos
+
 
 ```r
 ### Conjunto de datos 
@@ -95,6 +102,7 @@ ests_sf
 ## 8   VMT 28/08/2022  39.7 36542 37131 36276 37753 POINT (291083.7 -1345691)
 ```
 
+### Algunos gráficos
 
 
 ```r
