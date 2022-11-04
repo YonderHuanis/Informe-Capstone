@@ -1,12 +1,4 @@
----
-title: "Informe1"
-author: "Yonder Huanis"
-date: "2022-11-04"
-output:
-  html_document: 
-    keep_md: yes
-  pdf_document: default
----
+
 ### Librerias
 
 ```r
