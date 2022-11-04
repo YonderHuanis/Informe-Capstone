@@ -1,0 +1,86 @@
+---
+title: "Informe1"
+author: "Yonder Huanis"
+date: "2022-11-04"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r}
+library(sf)
+library(terra)
+```
+```{r}
+setwd('~/Documentos/capstone')
+
+### Lectura de las bandas del satelite
+banda1<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B1.TIF')
+banda2<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B2.TIF')
+banda3<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B3.TIF')
+banda4<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B4.TIF')
+
+### Maximos y minimos para cada banda, estos valores no aparecen por defecto.
+setMinMax(banda1)
+setMinMax(banda2)
+setMinMax(banda3)
+setMinMax(banda4)
+
+### Lectura del archivo que contiene el mapa del Peru
+Peru<-read_sf('gadm41_PER_shp/gadm41_PER_1.shp')
+```
+
+```{r}
+### Coordenadas de las estaciones, longitud y latitud
+est1<-st_point(c(-77.03364,-11.90219)) # Carabayllo
+est2<-st_point(c(-77.08447,-12.00889)) # SMP
+est3<-st_point(c(-77.04322,-12.07054)) # Campo de Marte
+est4<-st_point(c(-77.00769,-12.10859)) # San Borja
+est5<-st_point(c(-76.92706,-12.02869)) # Huachipa
+est6<-st_point(c(-76.97144,-12.04302)) # Sta Anita
+est7<-st_point(c(-76.99925,-11.98164)) # SJL
+est8<-st_point(c(-76.92,-12.16639)) # VMT
+
+### Transformacion de las estaciones como datos geometricos, proyeccion de las coordendas
+estcs<-st_sfc(est1,est2,est3,est4,est5,est6,est7,est8,crs=4326)
+estcs_p<-st_transform(estcs,crs(banda1))
+
+### Extraccion de los datos de cada banda , correspondiente a cada estacion
+B1<-extract(banda1,st_sf(estcs_p))[,2]
+B2<-extract(banda2,st_sf(estcs_p))[,2]
+B3<-extract(banda3,st_sf(estcs_p))[,2]
+B4<-extract(banda4,st_sf(estcs_p))[,2]
+
+### Definicion del data frame
+ests_atrib<-data.frame(
+        Lugar=c('CRB','SMP','CMar','SB','HCPA','STA','SJL','VMT'),
+        Fecha='28/08/2022',
+        PM10=c(74,33,23,103.7,68.8,67.8,75.1,39.7),B1,B2,B3,B4)
+ests_sf<-st_sf(ests_atrib,geometry=estcs_p)
+
+### Mapa de Lima Metropolitana, proyectado a las mismas coordenadas de los datos satelitales
+Lima<-st_transform(Peru[c(7,16),4],crs(banda1))
+
+### Reflactancia atmosferica calculada a partir de la banda 1
+### Calculos similares se haran para las otras bandas
+R1<-(B1*(2e-5)-0.1)/sin(54.43208851*pi/180)
+
+```
+
+```{r}
+### Conjunto de datos 
+ests_sf
+```
+
+
+```{r}
+### Ubicacion de las estaciones
+plot(Lima,reset=F,col='white',main='')
+plot(ests_sf[,1],add=T,pch=20)
+text(st_coordinates(estcs_p),labels=ests_sf[,1]$Lugar,pos=3,cex=0.65)
+```
+
+```{r}
+### Reflactancia versus concentracion de PM10
+plot(ests_sf[,3]$PM10,R1,xlab='PM10')
+```
