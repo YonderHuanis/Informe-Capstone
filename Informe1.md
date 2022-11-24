@@ -1,5 +1,12 @@
-# Informe
-
+---
+title: "Informe1"
+author: "Yonder Huanis"
+date: "2022-11-04"
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document: default
+---
 ### Librerias
 
 ```r
@@ -74,6 +81,9 @@ Lima<-st_transform(Peru[c(7,16),4],crs(banda1))
 ### Reflactancia atmosferica calculada a partir de la banda 1
 ### Calculos similares se haran para las otras bandas
 R1<-(B1*(2e-5)-0.1)/sin(54.43208851*pi/180)
+R2<-(B2*(2e-5)-0.1)/sin(54.43208851*pi/180)
+R3<-(B3*(2e-5)-0.1)/sin(54.43208851*pi/180)
+R4<-(B4*(2e-5)-0.1)/sin(54.43208851*pi/180)
 ```
 
 ### El conjunto de Datos

@@ -11,6 +11,7 @@ output:
 ```{r}
 library(sf)
 library(terra)
+library(gstat)
 ```
 ### Lectura de archivos externos
 
@@ -68,7 +69,9 @@ Lima<-st_transform(Peru[c(7,16),4],crs(banda1))
 ### Reflactancia atmosferica calculada a partir de la banda 1
 ### Calculos similares se haran para las otras bandas
 R1<-(B1*(2e-5)-0.1)/sin(54.43208851*pi/180)
-
+R2<-(B2*(2e-5)-0.1)/sin(54.43208851*pi/180)
+R3<-(B3*(2e-5)-0.1)/sin(54.43208851*pi/180)
+R4<-(B4*(2e-5)-0.1)/sin(54.43208851*pi/180)
 ```
 
 ### El conjunto de Datos
@@ -92,3 +95,7 @@ text(st_coordinates(estcs_p),labels=ests_sf[,1]$Lugar,pos=3,cex=0.65)
 plot(ests_sf[,3]$PM10,R1,xlab='PM10')
 ```
 
+```{r}
+v<-variogram(PM10~R1,data=ests_sf)
+plot(v)
+```
