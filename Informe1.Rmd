@@ -96,6 +96,6 @@ plot(ests_sf[,3]$PM10,R1,xlab='PM10')
 ```
 
 ```{r}
-v<-variogram(PM10~R1,data=ests_sf)
+v<-variogram(PM10~R1+R2+R3+R4,data=ests_sf)
 plot(v)
 ```
