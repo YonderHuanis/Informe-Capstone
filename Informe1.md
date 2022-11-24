@@ -24,6 +24,10 @@ library(terra)
 ```
 ## terra 1.6.17
 ```
+
+```r
+library(gstat)
+```
 ### Lectura de archivos externos
 
 
@@ -78,8 +82,7 @@ ests_sf<-st_sf(ests_atrib,geometry=estcs_p)
 ### Mapa de Lima Metropolitana, proyectado a las mismas coordenadas de los datos satelitales
 Lima<-st_transform(Peru[c(7,16),4],crs(banda1))
 
-### Reflactancia atmosferica calculada a partir de la banda 1
-### Calculos similares se haran para las otras bandas
+### TOA Reflectancia
 R1<-(B1*(2e-5)-0.1)/sin(54.43208851*pi/180)
 R2<-(B2*(2e-5)-0.1)/sin(54.43208851*pi/180)
 R3<-(B3*(2e-5)-0.1)/sin(54.43208851*pi/180)
@@ -131,3 +134,10 @@ plot(ests_sf[,3]$PM10,R1,xlab='PM10')
 
 ![](Informe1_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
+
+```r
+v<-variogram(PM10~R1+R2+R3+R4,data=ests_sf)
+plot(v)
+```
+
+![](Informe1_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
