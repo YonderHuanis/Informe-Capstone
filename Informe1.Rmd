@@ -177,6 +177,9 @@ modelo<-lm(log(PM10)~(X+Y+Toa_B1)^2+I(X^2)+I(Y^2)+I(Toa_B1^2),data=rbind(DT1,DT2
 modelo_b<-stepAIC(modelo)
 
 summary(modelo_b)
+
+## evaluacion
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
 ```
 
 ```{r}
@@ -185,6 +188,9 @@ modelo<-lm(log(PM10)~(X+Y+Toa_B2)^2+I(X^2)+I(Y^2)+I(Toa_B2^2),data=rbind(DT1,DT2
 modelo_b<-stepAIC(modelo)
 
 summary(modelo_b)
+
+# Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
 ```
 
 ```{r}
@@ -193,6 +199,9 @@ modelo<-lm(log(PM10)~(X+Y+Toa_B3)^2+I(X^2)+I(Y^2)+I(Toa_B3^2),data=rbind(DT1,DT2
 modelo_b<-stepAIC(modelo)
 
 summary(modelo_b)
+
+# Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
 ```
 
 ```{r}
@@ -201,6 +210,9 @@ modelo<-lm(log(PM10)~(X+Y+Toa_B4)^2+I(X^2)+I(Y^2)+I(Toa_B4^2),data=rbind(DT1,DT2
 modelo_b<-stepAIC(modelo)
 
 summary(modelo_b)
+
+# Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
 ```
 
 

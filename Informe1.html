@@ -579,6 +579,9 @@ modelo_b&lt;-stepAIC(modelo)</code></pre>
 ## Residual standard error: 0.22 on 14 degrees of freedom
 ## Multiple R-squared:  0.8518, Adjusted R-squared:  0.7777 
 ## F-statistic:  11.5 on 7 and 14 DF,  p-value: 7.505e-05</code></pre>
+<pre class="r"><code>## evaluacion
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)</code></pre>
+<pre><code>## [1] 2147.734</code></pre>
 <pre class="r"><code>## Toa_B2
 modelo&lt;-lm(log(PM10)~(X+Y+Toa_B2)^2+I(X^2)+I(Y^2)+I(Toa_B2^2),data=rbind(DT1,DT2,DT3))
 modelo_b&lt;-stepAIC(modelo)</code></pre>
@@ -641,6 +644,9 @@ modelo_b&lt;-stepAIC(modelo)</code></pre>
 ## Residual standard error: 0.2131 on 14 degrees of freedom
 ## Multiple R-squared:  0.861,  Adjusted R-squared:  0.7916 
 ## F-statistic: 12.39 on 7 and 14 DF,  p-value: 4.897e-05</code></pre>
+<pre class="r"><code># Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)</code></pre>
+<pre><code>## [1] 1767.908</code></pre>
 <pre class="r"><code>## Toa_B3
 modelo&lt;-lm(log(PM10)~(X+Y+Toa_B3)^2+I(X^2)+I(Y^2)+I(Toa_B3^2),data=rbind(DT1,DT2,DT3))
 modelo_b&lt;-stepAIC(modelo)</code></pre>
@@ -694,6 +700,9 @@ modelo_b&lt;-stepAIC(modelo)</code></pre>
 ## Residual standard error: 0.2171 on 13 degrees of freedom
 ## Multiple R-squared:  0.8661, Adjusted R-squared:  0.7837 
 ## F-statistic: 10.51 on 8 and 13 DF,  p-value: 0.0001473</code></pre>
+<pre class="r"><code># Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)</code></pre>
+<pre><code>## [1] 63285.21</code></pre>
 <pre class="r"><code>## Toa_B4
 modelo&lt;-lm(log(PM10)~(X+Y+Toa_B4)^2+I(X^2)+I(Y^2)+I(Toa_B4^2),data=rbind(DT1,DT2,DT3))
 modelo_b&lt;-stepAIC(modelo)</code></pre>
@@ -775,6 +784,9 @@ modelo_b&lt;-stepAIC(modelo)</code></pre>
 ## Residual standard error: 0.2136 on 16 degrees of freedom
 ## Multiple R-squared:  0.8404, Adjusted R-squared:  0.7905 
 ## F-statistic: 16.85 on 5 and 16 DF,  p-value: 7.088e-06</code></pre>
+<pre class="r"><code># Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)</code></pre>
+<pre><code>## [1] 2445.446</code></pre>
 </div>
 
 

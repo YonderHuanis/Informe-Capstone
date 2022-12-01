@@ -275,6 +275,15 @@ summary(modelo_b)
 ## F-statistic:  11.5 on 7 and 14 DF,  p-value: 7.505e-05
 ```
 
+```r
+## evaluacion
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
+```
+
+```
+## [1] 2147.734
+```
+
 
 ```r
 ## Toa_B2
@@ -350,6 +359,15 @@ summary(modelo_b)
 ## F-statistic: 12.39 on 7 and 14 DF,  p-value: 4.897e-05
 ```
 
+```r
+# Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
+```
+
+```
+## [1] 1767.908
+```
+
 
 ```r
 ## Toa_B3
@@ -414,6 +432,15 @@ summary(modelo_b)
 ## Residual standard error: 0.2171 on 13 degrees of freedom
 ## Multiple R-squared:  0.8661,	Adjusted R-squared:  0.7837 
 ## F-statistic: 10.51 on 8 and 13 DF,  p-value: 0.0001473
+```
+
+```r
+# Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
+```
+
+```
+## [1] 63285.21
 ```
 
 
@@ -508,6 +535,15 @@ summary(modelo_b)
 ## Residual standard error: 0.2136 on 16 degrees of freedom
 ## Multiple R-squared:  0.8404,	Adjusted R-squared:  0.7905 
 ## F-statistic: 16.85 on 5 and 16 DF,  p-value: 7.088e-06
+```
+
+```r
+# Eval
+mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
+```
+
+```
+## [1] 2445.446
 ```
 
 
