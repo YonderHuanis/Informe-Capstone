@@ -12,30 +12,57 @@ output:
 library(sf)
 library(terra)
 library(gstat)
+library(MASS)
 ```
 ### Lectura de archivos externos
 
 ```{r}
 
 ### Lectura de las bandas del satelite
-banda1<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B1.TIF')
-banda2<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B2.TIF')
-banda3<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B3.TIF')
-banda4<-rast('LC08_L1TP_007068_20220828_20220910_02_T1/LC08_L1TP_007068_20220828_20220910_02_T1_B4.TIF')
+# dia 30/04/2022
+banda1_30_04<-rast('dia_30_04_2022/LC09_L1TP_007068_20220430_20220430_02_T1_B1.TIF')
+banda2_30_04<-rast('dia_30_04_2022/LC09_L1TP_007068_20220430_20220430_02_T1_B2.TIF')
+banda3_30_04<-rast('dia_30_04_2022/LC09_L1TP_007068_20220430_20220430_02_T1_B3.TIF')
+banda4_30_04<-rast('dia_30_04_2022/LC09_L1TP_007068_20220430_20220430_02_T1_B4.TIF')
 
-### Maximos y minimos para cada banda, estos valores no aparecen por defecto.
-setMinMax(banda1)
-setMinMax(banda2)
-setMinMax(banda3)
-setMinMax(banda4)
+# dia 16/05/2022
+banda1_16_05<-rast('dia_16_05_2022/LC09_L1TP_007068_20220516_20220516_02_T1_B1.TIF')
+banda2_16_05<-rast('dia_16_05_2022/LC09_L1TP_007068_20220516_20220516_02_T1_B2.TIF')
+banda3_16_05<-rast('dia_16_05_2022/LC09_L1TP_007068_20220516_20220516_02_T1_B3.TIF')
+banda4_16_05<-rast('dia_16_05_2022/LC09_L1TP_007068_20220516_20220516_02_T1_B4.TIF')
+
+# dia 1/06/2022
+banda1_01_06<-rast('dia_01_06_2022/LC09_L1TP_007068_20220601_20220602_02_T1_B1.TIF')
+banda2_01_06<-rast('dia_01_06_2022/LC09_L1TP_007068_20220601_20220602_02_T1_B2.TIF')
+banda3_01_06<-rast('dia_01_06_2022/LC09_L1TP_007068_20220601_20220602_02_T1_B3.TIF')
+banda4_01_06<-rast('dia_01_06_2022/LC09_L1TP_007068_20220601_20220602_02_T1_B4.TIF')
+
+# dia 9/06/2022
+banda1_09_06<-rast('dia_09_06_2022/LC08_L1TP_007068_20220609_20220616_02_T1_B1.TIF')
+banda2_09_06<-rast('dia_09_06_2022/LC08_L1TP_007068_20220609_20220616_02_T1_B2.TIF')
+banda3_09_06<-rast('dia_09_06_2022/LC08_L1TP_007068_20220609_20220616_02_T1_B3.TIF')
+banda4_09_06<-rast('dia_09_06_2022/LC08_L1TP_007068_20220609_20220616_02_T1_B4.TIF')
+
+setMinMax(banda1_30_04)
+setMinMax(banda1_16_05)
+setMinMax(banda1_09_06)
+setMinMax(banda1_01_06)
+setMinMax(banda2_30_04)
+setMinMax(banda2_16_05)
+setMinMax(banda2_09_06)
+setMinMax(banda2_01_06)
+setMinMax(banda3_30_04)
+setMinMax(banda3_16_05)
+setMinMax(banda3_09_06)
+setMinMax(banda3_01_06)
+setMinMax(banda4_30_04)
+setMinMax(banda4_16_05)
+setMinMax(banda4_09_06)
+setMinMax(banda4_01_06)
 
 ### Lectura del archivo que contiene el mapa del Peru
 Peru<-read_sf('gadm41_PER_shp/gadm41_PER_1.shp')
-```
 
-### Creacion de coordenadas y variables
-
-```{r}
 ### Coordenadas de las estaciones, longitud y latitud
 est1<-st_point(c(-77.03364,-11.90219)) # Carabayllo
 est2<-st_point(c(-77.08447,-12.00889)) # SMP
@@ -48,53 +75,137 @@ est8<-st_point(c(-76.92,-12.16639)) # VMT
 
 ### Transformacion de las estaciones como datos geometricos, proyeccion de las coordendas
 estcs<-st_sfc(est1,est2,est3,est4,est5,est6,est7,est8,crs=4326)
-estcs_p<-st_transform(estcs,crs(banda1))
+estcs_p<-st_transform(estcs,crs(banda1_30_04))
 
-### Extraccion de los datos de cada banda , correspondiente a cada estacion
-B1<-extract(banda1,st_sf(estcs_p))[,2]
-B2<-extract(banda2,st_sf(estcs_p))[,2]
-B3<-extract(banda3,st_sf(estcs_p))[,2]
-B4<-extract(banda4,st_sf(estcs_p))[,2]
-
-### Definicion del data frame
-ests_atrib<-data.frame(
-        Lugar=c('CRB','SMP','CMar','SB','HCPA','STA','SJL','VMT'),
-        Fecha='28/08/2022',
-        PM10=c(74,33,23,103.7,68.8,67.8,75.1,39.7),B1,B2,B3,B4)
-ests_sf<-st_sf(ests_atrib,geometry=estcs_p)
+# Coordenadas por separado
+X<-st_coordinates(estcs_p)[,1]
+Y<-st_coordinates(estcs_p)[,2]
 
 ### Mapa de Lima Metropolitana, proyectado a las mismas coordenadas de los datos satelitales
-Lima<-st_transform(Peru[c(7,16),4],crs(banda1))
-
-### TOA Reflectancia
-R1<-(B1*(2e-5)-0.1)/sin(54.43208851*pi/180)
-R2<-(B2*(2e-5)-0.1)/sin(54.43208851*pi/180)
-R3<-(B3*(2e-5)-0.1)/sin(54.43208851*pi/180)
-R4<-(B4*(2e-5)-0.1)/sin(54.43208851*pi/180)
+Lima<-st_transform(Peru[c(7,16),4],crs(banda1_30_04))
 ```
 
-### El conjunto de Datos
+
+
+### Creacion de coordenadas y variables
 
 ```{r}
-### Conjunto de datos 
-ests_sf
-```
+### Definicion del data frame 30/04/2022
+B1<-extract(banda1_30_04,st_sf(estcs_p))[,2]
+Toa_B1<-(B1*0.00002-0.1)/sin(51.68072692*pi/180)
+B2<-extract(banda2_30_04,st_sf(estcs_p))[,2]
+Toa_B2<-(B2*0.00002-0.1)/sin(51.68072692*pi/180)
+B3<-extract(banda3_30_04,st_sf(estcs_p))[,2]
+Toa_B3<-(B3*0.00002-0.1)/sin(51.68072692*pi/180)
+B4<-extract(banda4_30_04,st_sf(estcs_p))[,2]
+Toa_B4<-(B4*0.00002-0.1)/sin(51.68072692*pi/180)
 
-### Algunos gráficos
+DT1<-data.frame(
+        Lugar=c('CRB','SMP','CMar','SB','HCHP','STA','SJL','VMT'),X=as.vector(X),
+        Y=as.vector(Y),
+        Fecha='30/04/2022',
+        PM10=c(106.1,39.1,29.1,85.3,120.7,82.9,109,115.6),
+        Toa_B1,Toa_B2,Toa_B3,Toa_B4)
+#ests_sf<-st_sf(ests_atrib,geometry=estcs_p)
+
+### Definicion del data frame 16/05/2022
+B1<-extract(banda1_16_05,st_sf(estcs_p))[,2]
+Toa_B1<-(B1*0.00002-0.1)/sin(48.80278526*pi/180)
+B2<-extract(banda2_16_05,st_sf(estcs_p))[,2]
+Toa_B2<-(B2*0.00002-0.1)/sin(48.80278526*pi/180)
+B3<-extract(banda3_16_05,st_sf(estcs_p))[,2]
+Toa_B3<-(B3*0.00002-0.1)/sin(48.80278526*pi/180)
+B4<-extract(banda4_16_05,st_sf(estcs_p))[,2]
+Toa_B4<-(B4*0.00002-0.1)/sin(48.80278526*pi/180)
+
+DT2<-data.frame(
+        Lugar=c('CRB','SMP','CMar','STA','SJL','VMT'),X=as.vector(X[c(-4,-5)]),
+        Y=as.vector(Y[c(-4,-5)]),
+        Fecha='16/05/2022',
+        PM10=c(106.7,42.9,30,77.2,81.8,100.1),Toa_B1=Toa_B1[c(-4,-5)],
+        Toa_B2=Toa_B2[c(-4,-5)],
+        Toa_B3=Toa_B3[c(-4,-5)],
+        Toa_B4=Toa_B4[c(-4,-5)])
+#ests_sf<-st_sf(ests_atrib,geometry=estcs_p)
+
+### Data frame 01/06/2022
+B1<-extract(banda1_01_06,st_sf(estcs_p))[,2]
+Toa_B1<-(B1*0.00002-0.1)/sin(46.42011036*pi/180)
+B2<-extract(banda2_01_06,st_sf(estcs_p))[,2]
+Toa_B2<-(B2*0.00002-0.1)/sin(46.42011036*pi/180)
+B3<-extract(banda3_01_06,st_sf(estcs_p))[,2]
+Toa_B3<-(B3*0.00002-0.1)/sin(46.42011036*pi/180)
+B4<-extract(banda4_01_06,st_sf(estcs_p))[,2]
+Toa_B4<-(B4*0.00002-0.1)/sin(46.42011036*pi/180)
+
+DT3<-data.frame(
+        Lugar=c('CRB','SMP','CMar','SB','HCHP','STA','SJL','VMT'),X=as.vector(X),
+        Y=as.vector(Y),
+        Fecha='01/06/2022',
+        PM10=c(72.7,46.3,31.2,93,100.7,84.8,72,50.4),Toa_B1,Toa_B2,Toa_B3,
+        Toa_B4)
+
+### Definicion del data frame 09/06/2022
+B1<-extract(banda1_09_06,st_sf(estcs_p))[,2]
+Toa_B1<-(B1*0.00002-0.1)/sin(45.65514607*pi/180)
+B2<-extract(banda2_09_06,st_sf(estcs_p))[,2]
+Toa_B2<-(B2*0.00002-0.1)/sin(45.65514607*pi/180)
+B3<-extract(banda3_09_06,st_sf(estcs_p))[,2]
+Toa_B3<-(B3*0.00002-0.1)/sin(45.65514607*pi/180)
+B4<-extract(banda4_09_06,st_sf(estcs_p))[,2]
+Toa_B4<-(B4*0.00002-0.1)/sin(45.65514607*pi/180)
+
+DT4<-data.frame(
+        Lugar=c('CRB','SMP','CMar','SB','HCHP','STA','SJL','VMT'),X=as.vector(X),
+        Y=as.vector(Y),
+        Fecha='09/06/2022',
+        PM10=c(69.8,36.5,22.2,73.7,122.9,69.6,67.8,33),Toa_B1,
+        Toa_B2,Toa_B3,Toa_B4)
+
+dt<-rbind(DT1,DT2,DT3,DT4)
+#ests_sf<-st_sf(ests_atrib,geometry=estcs_p)
+
+```
 
 ```{r}
-### Ubicacion de las estaciones
-plot(Lima,reset=F,col='white',main='')
-plot(ests_sf[,1],add=T,pch=20)
-text(st_coordinates(estcs_p),labels=ests_sf[,1]$Lugar,pos=3,cex=0.65)
+pairs(dt[,5:9])
 ```
 
 ```{r}
-### Reflactancia versus concentracion de PM10
-plot(ests_sf[,3]$PM10,R1,xlab='PM10')
+## Toa_B1
+modelo<-lm(log(PM10)~(X+Y+Toa_B1)^2+I(X^2)+I(Y^2)+I(Toa_B1^2),data=rbind(DT1,DT2,DT3))
+modelo_b<-stepAIC(modelo)
+
+summary(modelo_b)
 ```
 
 ```{r}
-v<-variogram(PM10~R1+R2+R3+R4,data=ests_sf)
-plot(v)
+## Toa_B2
+modelo<-lm(log(PM10)~(X+Y+Toa_B2)^2+I(X^2)+I(Y^2)+I(Toa_B2^2),data=rbind(DT1,DT2,DT3))
+modelo_b<-stepAIC(modelo)
+
+summary(modelo_b)
 ```
+
+```{r}
+## Toa_B3
+modelo<-lm(log(PM10)~(X+Y+Toa_B3)^2+I(X^2)+I(Y^2)+I(Toa_B3^2),data=rbind(DT1,DT2,DT3))
+modelo_b<-stepAIC(modelo)
+
+summary(modelo_b)
+```
+
+```{r}
+## Toa_B4
+modelo<-lm(log(PM10)~(X+Y+Toa_B4)^2+I(X^2)+I(Y^2)+I(Toa_B4^2),data=rbind(DT1,DT2,DT3))
+modelo_b<-stepAIC(modelo)
+
+summary(modelo_b)
+```
+
+
+
+
+
+
+
