@@ -630,6 +630,7 @@ pred.img
 
 
 ```r
+# Mapa predicciones
 mapa_pred<-terra::predict(pred.img,modelo_best)
 ```
 
