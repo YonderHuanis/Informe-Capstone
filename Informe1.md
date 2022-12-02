@@ -546,9 +546,96 @@ mean((DT4$PM10-exp(predict(modelo_b,DT4)))^2)
 ## [1] 2445.446
 ```
 
+### Mapa Predicciones
 
 
+```r
+modelo_best<-lm(formula = log(PM10) ~ X + Y + Toa_B2 + I(Y^2) + X:Y + X:Toa_B2 + 
+    Y:Toa_B2, data = rbind(DT1, DT2, DT3))
+```
 
 
+```r
+TOA_B2<-(banda2_09_06*0.00002-0.1)/sin(45.65514607*pi/180)
+lima_crop<-crop(TOA_B2,Lima)
+lima_m<-mask(lima_crop,Lima)
+names(lima_m)<-'Toa_B2'
+plot(lima_m)
+```
+
+![](Informe1_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 
+```r
+vals_x<-rep(xFromCol(lima_m,1:2363),3487)
+X<-rast(nrows = 3487, ncols = 2363, resolution = 30, 
+                  xmin = 252735, xmax = 323625, ymin = -1384755, ymax = -1280145,
+                  vals = vals_x,crs='EPSG:32618',name='X')
+X
+```
+
+```
+## class       : SpatRaster 
+## dimensions  : 3487, 2363, 1  (nrow, ncol, nlyr)
+## resolution  : 30, 30  (x, y)
+## extent      : 252735, 323625, -1384755, -1280145  (xmin, xmax, ymin, ymax)
+## coord. ref. : WGS 84 / UTM zone 18N (EPSG:32618) 
+## source      : memory 
+## name        :      X 
+## min value   : 252750 
+## max value   : 323610
+```
+
+
+```r
+vals_y<-rep(yFromRow(lima_m,1:3487),rep(2363,3487))
+Y<-rast(nrows = 3487, ncols = 2363, resolution = 30, 
+                  xmin = 252735, xmax = 323625, ymin = -1384755, ymax = -1280145,
+                  vals = vals_y,crs='EPSG:32618',name='Y')
+Y
+```
+
+```
+## class       : SpatRaster 
+## dimensions  : 3487, 2363, 1  (nrow, ncol, nlyr)
+## resolution  : 30, 30  (x, y)
+## extent      : 252735, 323625, -1384755, -1280145  (xmin, xmax, ymin, ymax)
+## coord. ref. : WGS 84 / UTM zone 18N (EPSG:32618) 
+## source      : memory 
+## name        :        Y 
+## min value   : -1384740 
+## max value   : -1280160
+```
+
+
+```r
+# Raster donde se hara la prediccion , dia 09/06/2022
+pred.img<-c(lima_m,X,Y)
+pred.img
+```
+
+```
+## class       : SpatRaster 
+## dimensions  : 3487, 2363, 3  (nrow, ncol, nlyr)
+## resolution  : 30, 30  (x, y)
+## extent      : 252735, 323625, -1384755, -1280145  (xmin, xmax, ymin, ymax)
+## coord. ref. : WGS 84 / UTM zone 18N (EPSG:32618) 
+## sources     : memory  
+##               memory  
+##               memory  
+## names       :     Toa_B2,      X,        Y 
+## min values  : 0.07254464, 252750, -1384740 
+## max values  : 0.48510394, 323610, -1280160
+```
+
+
+```r
+mapa_pred<-terra::predict(pred.img,modelo_best)
+```
+
+
+```r
+plot(mapa_pred,main='Log(PM10)')
+```
+
+![](Informe1_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
